@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
+import axios from 'axios'
 import FilterButton from './components/FilterButton';
 import Todo from './components/Todo';
 import Form from './components/Form';
@@ -13,9 +14,19 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP)
 
 function App(props) {
-
+  
+  const [ taskData, setTaskData ] = useState([])
   const [ tasks, setTasks ] = useState(props.tasks)
   const [filter, setFilter] = useState("All")
+
+  const fetchData = () =>  { 
+    fetch('/taskdata')
+    .then(response => response.json())
+    .then(data => setTaskData(data.todos))
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const addTask = (name) => {
     const newTask = {
@@ -52,12 +63,12 @@ function App(props) {
     setTasks(updatedTasks)
   }
 
-  const taskList = tasks
+  const taskList = taskData
   .filter(FILTER_MAP[filter])
   .map(task => (
     <Todo 
-      id={task.id}
-      key={task.id}
+      id={task._id}
+      key={task._id}
       name={task.name} 
       complete={task.complete} 
       toggleTaskCompleted={toggleTaskCompleted}
@@ -75,8 +86,8 @@ function App(props) {
     />
   ))
 
-  const tasksNoun = tasks.length === 1 ? 'task' : 'tasks' 
-  const headingText = `${tasks.length} ${tasksNoun} remaining`
+  const tasksNoun = taskData.length === 1 ? 'task' : 'tasks' 
+  const headingText = `${taskData.length} ${tasksNoun} remaining`
 
   return (
     <div className="todoapp stack-large">
