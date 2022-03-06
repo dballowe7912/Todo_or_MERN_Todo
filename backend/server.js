@@ -7,6 +7,7 @@ import connectDB from './config/db.js'
 dotenv.config()
 const app = express()
 const PORT = 5000
+app.use(express.json())
 
 import todoRoutes from './routes/todoRoutes.js'
 
@@ -36,12 +37,6 @@ connectDB()
 // })
 
 app.use('/taskdata', todoRoutes)
-
-app.post('/addtask', (req, res) => {
-  let newTask = req.body.newTask
-
-  
-})
 
 //  post route for adding new task
 // app.post('/addtask', (req, res) => {

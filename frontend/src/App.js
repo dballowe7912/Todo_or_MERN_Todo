@@ -19,28 +19,29 @@ function App(props) {
   const [ tasks, setTasks ] = useState(props.tasks)
   const [filter, setFilter] = useState("All")
 
-  const fetchData = () =>  { 
-    fetch('/taskdata')
-    .then(response => response.json())
-    .then(data => setTaskData(data.todos))
-  }
   useEffect(() => {
+    const fetchData = () =>  { 
+      fetch('/taskdata')
+      .then(response => response.json())
+      .then(data => setTaskData(data.todos))
+    }
+
     fetchData()
-  }, [])
+  }, [taskData])
 
   const addTask = (name) => {
     const newTask = {
-      id: `todo-${nanoid()}`,
       name: name,
       complete: false
     }
 
-    setTasks([...tasks, newTask])
+    axios.post('/taskdata', newTask)
   }
 
   const deleteTask = (id) => {
-    const remainingTasks = tasks.filter(task => task.id !== id)
-    setTasks(remainingTasks)
+    axios.delete(`/taskdata/${id}`)
+    // const remainingTasks = tasks.filter(task => task.id !== id)
+    // setTasks(remainingTasks)
   }
 
   const editTask = (id, newName) => {
