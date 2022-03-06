@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
 import axios from 'axios'
 import FilterButton from './components/FilterButton';
 import Todo from './components/Todo';
@@ -27,7 +26,7 @@ function App(props) {
     }
 
     fetchData()
-  }, [taskData])
+  }, [taskData, tasks])
 
   const addTask = (name) => {
     const newTask = {
@@ -40,18 +39,15 @@ function App(props) {
 
   const deleteTask = (id) => {
     axios.delete(`/taskdata/${id}`)
-    // const remainingTasks = tasks.filter(task => task.id !== id)
-    // setTasks(remainingTasks)
   }
 
   const editTask = (id, newName) => {
-    const editedTaskList = tasks.map(task => {
-      if (id === task.id) {
-        return { ...task, name: newName}
-      }
-      return task
-    })
-    setTasks(editedTaskList)
+    const editedTask = {
+      name: newName,
+      complete: false
+    }
+
+    axios.put(`/taskdata/${id}`, editedTask)
   }
 
   const toggleTaskCompleted = (id) => {

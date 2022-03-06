@@ -53,4 +53,27 @@ const deleteTodo = asyncHandler(async (req, res) => {
  }
 })
 
-export { getTodos, getTodoById, createTodo, deleteTodo }
+// @desc    Update a todo
+// @route   PUT /taskdata/:id
+// @access  Public
+const editTodo = asyncHandler(async (req, res) => {
+  const todo = await Todo.findById(req.params.id)
+
+  if (todo) {
+    todo.name = req.body.name
+
+    const updatedTodo = await todo.save()
+    res.json(updatedTodo)
+  } else {
+    res.status(404)
+    throw new Error('Todo not found')
+  }
+})
+
+export { 
+  getTodos, 
+  getTodoById, 
+  createTodo, 
+  deleteTodo,
+  editTodo
+}
